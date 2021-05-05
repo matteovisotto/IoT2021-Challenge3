@@ -20,6 +20,8 @@ implementation {
 
   bool locked;
   uint16_t counter = 0;
+  uint16_t rCounter = 0;
+  uint8_t myId = TOS_NODE_ID;
   
   event void Boot.booted() {
     call AMControl.start();
@@ -27,7 +29,13 @@ implementation {
 
   event void AMControl.startDone(error_t err) {
     if (err == SUCCESS) {
-      call MilliTimer.startPeriodic(250);
+    uint8_t freq = 1000;
+    if(myId == 2){
+    	freq = 333;
+    } else if(myId == 3){
+    	freq = 200;
+    }
+    call MilliTimer.startPeriodic(freq);
     }
     else {
       call AMControl.start();
@@ -40,7 +48,6 @@ implementation {
   
   event void MilliTimer.fired() {
     counter++;
-    dbg("RadioCountToLedsC", "RadioCountToLedsC: timer fired, counter is %hu.\n", counter);
     if (locked) {
       return;
     }
@@ -51,6 +58,7 @@ implementation {
       }
 
       rcm->counter = counter;
+      rcm->sender_id = TOS_NODE_ID;
       if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
 	dbg("ChallengeC", "Challenge3C: packet sent.\n", counter);	
 	locked = TRUE;
@@ -60,7 +68,17 @@ implementation {
 
   event message_t* Receive.receive(message_t* bufPtr, 
 				   void* payload, uint8_t len) {
-    
+				   
+    if (len != sizeof(radio_count_message_t)){
+    	return bufPtr;
+    } else {
+    	radio_count_message_t* rcm = (radio_count_msg_t*) payload;
+    	rCounter++;
+    	//Switch led
+    	if(rCounter%10 == 0){
+    		//Switch of all leds
+    	}
+    }
   }
 
   event void AMSend.sendDone(message_t* bufPtr, error_t error) {
