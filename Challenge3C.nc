@@ -21,9 +21,10 @@ implementation {
   bool locked;
   uint16_t counter = 0;
   uint16_t rCounter = 0;
-  uint8_t myId = TOS_NODE_ID;
+  uint8_t myId = 0;
   
   event void Boot.booted() {
+  	myId = TOS_NODE_ID;
     call AMControl.start();
   }
 
@@ -69,14 +70,22 @@ implementation {
   event message_t* Receive.receive(message_t* bufPtr, 
 				   void* payload, uint8_t len) {
 				   
-    if (len != sizeof(radio_count_message_t)){
+    if (len != sizeof(radio_count_msg_t)){
     	return bufPtr;
     } else {
-    	radio_count_message_t* rcm = (radio_count_msg_t*) payload;
+    	radio_count_msg_t* rcm = (radio_count_msg_t*) payload;
     	rCounter++;
-    	//Switch led
+    	if(rcm->sender_id == 1){
+    		call Leds.led0Toggle();
+    	} else if (rcm->sender_id == 2){
+    		call Leds.led1Toggle();
+    	} else if (rcm->sender_id == 3) {
+    		call Leds.led2Toggle();
+    	}
     	if(rCounter%10 == 0){
-    		//Switch of all leds
+    		call Leds.led0Off();
+    		call Leds.led1Off();
+    		call Leds.led2Off();
     	}
     }
   }
