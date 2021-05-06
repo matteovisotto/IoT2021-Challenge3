@@ -1,7 +1,7 @@
 
 #include "Timer.h"
 #include "Challenge3.h"
- 
+#include "printf.h"
 
 module Challenge3C @safe() {
   uses {
@@ -26,16 +26,21 @@ implementation {
   event void Boot.booted() {
   	myId = TOS_NODE_ID;
     call AMControl.start();
+    printf("Booted\n");
+    printf("Mote id: %u\n", TOS_NODE_ID);
+    printfflush();
   }
 
   event void AMControl.startDone(error_t err) {
     if (err == SUCCESS) {
-    uint8_t freq = 1000;
+    uint16_t freq = 1000;
     if(myId == 2){
     	freq = 333;
     } else if(myId == 3){
     	freq = 200;
     }
+    printf("Frequenza: %ld\n", freq);
+    printfflush();
     call MilliTimer.startPeriodic(freq);
     }
     else {
@@ -52,7 +57,8 @@ implementation {
     if (locked) {
       return;
     }
-    else {
+    else {	
+   
       radio_count_msg_t* rcm = (radio_count_msg_t*)call Packet.getPayload(&packet, sizeof(radio_count_msg_t));
       if (rcm == NULL) {
 	return;
@@ -75,6 +81,8 @@ implementation {
     } else {
     	radio_count_msg_t* rcm = (radio_count_msg_t*) payload;
     	rCounter++;
+    	printf("Sender ID: %u\n", rcm->sender_id);
+    	printfflush();
     	if(rcm->sender_id == 1){
     		call Leds.led0Toggle();
     	} else if (rcm->sender_id == 2){
@@ -87,6 +95,12 @@ implementation {
     		call Leds.led1Off();
     		call Leds.led2Off();
     	}
+    	
+    	if(myId == 2){
+    		//Print here leds status
+    	}
+    	
+    	return bufPtr;
     }
   }
 

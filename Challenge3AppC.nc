@@ -1,6 +1,7 @@
 
 #include "Challenge3.h"
-
+#define NEW_PRINTF_SEMANTICS
+#include "printf.h"
 
 configuration Challenge3AppC {}
 implementation {
@@ -8,6 +9,8 @@ implementation {
   components new AMSenderC(AM_RADIO_COUNT_MSG);
   components new AMReceiverC(AM_RADIO_COUNT_MSG);
   components new TimerMilliC();
+  components SerialStartC;
+   components PrintfC;
   components ActiveMessageC;
   
   App.Boot -> MainC.Boot;
