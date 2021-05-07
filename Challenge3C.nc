@@ -19,7 +19,6 @@ implementation {
   message_t packet;
 
   bool locked;
-  uint16_t counter = 0;
   uint16_t rCounter = 0;
   uint8_t myId = 0;
   
@@ -57,7 +56,6 @@ implementation {
   }
   
   event void MilliTimer.fired() {
-    counter++;
     if (locked) {
       return;
     }
@@ -68,10 +66,9 @@ implementation {
 	return;
       }
 
-      rcm->counter = counter;
+      rcm->counter = rCounter;
       rcm->sender_id = TOS_NODE_ID;
       if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_count_msg_t)) == SUCCESS) {
-	dbg("ChallengeC", "Challenge3C: packet sent.\n", counter);	
 	locked = TRUE;
       }
     }
@@ -111,7 +108,7 @@ implementation {
     		call Leds.led2Toggle();
     		led2 = toggleLed(led2);
     	}
-    	if(rCounter%10 == 0){
+    	if(rcm->counter%10 == 0){
     		call Leds.led0Off();
     		call Leds.led1Off();
     		call Leds.led2Off();
