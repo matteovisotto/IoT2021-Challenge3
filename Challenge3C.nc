@@ -23,6 +23,10 @@ implementation {
   uint16_t rCounter = 0;
   uint8_t myId = 0;
   
+  uint8_t led0 = 0;
+  uint8_t led1 = 0;
+  uint8_t led2 = 0;
+  
   event void Boot.booted() {
   	myId = TOS_NODE_ID;
     call AMControl.start();
@@ -73,6 +77,20 @@ implementation {
     }
   }
 
+	uint8_t toggleLed(uint8_t status){
+		if(status==0){
+			return 1;
+		}
+		
+		return 0;
+	}
+	
+	void ledsOff() {
+		led1 = 0;
+		led2 = 0;
+		led0 = 0;
+	}
+
   event message_t* Receive.receive(message_t* bufPtr, 
 				   void* payload, uint8_t len) {
 				   
@@ -85,19 +103,24 @@ implementation {
     	printfflush();
     	if(rcm->sender_id == 1){
     		call Leds.led0Toggle();
+    		led0 = toggleLed(led0);
     	} else if (rcm->sender_id == 2){
     		call Leds.led1Toggle();
+    		led1 = toggleLed(led1);
     	} else if (rcm->sender_id == 3) {
     		call Leds.led2Toggle();
+    		led2 = toggleLed(led2);
     	}
     	if(rCounter%10 == 0){
     		call Leds.led0Off();
     		call Leds.led1Off();
     		call Leds.led2Off();
+    		ledsOff();
     	}
     	
     	if(myId == 2){
-    		//Print here leds status
+    		printf("%u%u%u\n", led0, led1, led2);
+    		printfflush();
     	}
     	
     	return bufPtr;
