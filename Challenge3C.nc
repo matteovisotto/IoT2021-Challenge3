@@ -119,7 +119,7 @@ implementation {
     	}
     	
     	if(myId == 2){
-    		printf("%u%u%u\n", led0, led1, led2);
+    		printf("%u%u%u\n", led2, led1, led0);
     		printfflush();
     	}
     	

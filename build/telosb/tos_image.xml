@@ -1,12 +1,12 @@
 <tos_image>
   <ident>
-    <appname>Challenge3AppC</appname>
-    <deluge_support>no</deluge_support>
-    <timestamp>6094F87EL</timestamp>
-    <platform>telosb</platform>
+    <uidhash>C31F8011L</uidhash>
     <hostname>user-iot</hostname>
-    <uidhash>EC6AD9A1L</uidhash>
+    <deluge_support>no</deluge_support>
+    <timestamp>6094FAB8L</timestamp>
+    <platform>telosb</platform>
     <userhash>2C00343AL</userhash>
+    <appname>Challenge3AppC</appname>
     <username>user</username>
   </ident>
   <image format="ihex">
@@ -769,8 +769,8 @@
 :106F40005F43C2936A1101244F43C24F6A113E400E
 :106F50000A001F427211B0121A790F930C20B0125E
 :106F60009257B012A257B012B257C2436C11C2432B
-:106F70006A11C2436E11E293701110205F426A11D0
-:106F80000F125F426C110F125F426E110F1230121E
+:106F70006A11C2436E11E293701110205F426E11CC
+:106F80000F125F426C110F125F426A110F12301222
 :106F9000A384B012A67A3152B0125E68824A781188
 :106FA000B012CC49C243C011B012DE49B012645CC9
 :106FB0003040C674C293B41128201A42E0131B4219
